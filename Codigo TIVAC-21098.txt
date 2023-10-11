@@ -174,3 +174,58 @@ void loop() {
     }
   }
 }
+
+//************************************************************************************************
+//FUNCIONES  
+//************************************************************************************************/
+
+void drawing() {
+   // Indicar cómo dibujar y qué significa 'X' y ' '
+   Serial.println("Dibuja tu obra (utiliza 'X' para dibujar y ' ' para dejar espacios entre carácter, y 'D' para terminar): ");
+   Serial.println("Tienes espacio para dibujar de 20 columnas y 10 filas");
+
+    //Inicializar la matriz "obra" con espacios en blanco
+   for (int i = 0; i < altura; i++) {
+        for (int j = 0; j < ancho; j++) {
+            obra[i][j] = ' ';
+        }
+    }
+
+  //Iterar a traves de la matriz "obra"  para que pueda dinujar 
+   for (int i = 0; i < altura; i++) {
+        for (int j = 0; j < ancho; j++) {
+            while (Serial.available() == 0) {
+                // Espera a que el usuario ingrese caracteres
+            }
+            char caracter = Serial.read();
+            if (caracter == 'X' || caracter == 'x') {  //Dibuja usando "X"
+                obra[i][j] = 'X';
+            } else if (caracter == 'D' || caracter == 'd') {  //Si presiona "D" su dibujo termina
+                // Terminar el dibujo
+                Serial.println("\nDibujo terminado.");
+                return;
+            }
+            Serial.print(obra[i][j]);  //Muestra el caracter en el monitor serial 
+        }
+        Serial.println(); //Cambiar de linea despues de una fila 
+    }   
+}
+
+void guardar() {
+  // Abre el archivo en modo escritura
+  Post = SD.open("postlab.txt", FILE_WRITE);
+
+  if (Post) {
+    for (int i = 0; i < altura; i++) {  //Itera a traves de la matriz "obra" y escribe su contenido en el monitor serial
+      for (int j = 0; j < ancho; j++) {
+        Post.print(obra[i][j]);
+      }
+      Post.println();
+    }
+
+    Post.close();
+    Serial.println("Imagen guardada correctamente en postlab.txt");
+  } else {
+    Serial.println("No se encontró el archivo para escritura.");
+  }
+}
