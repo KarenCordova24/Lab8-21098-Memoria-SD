@@ -23,7 +23,7 @@ int FLAG = 0;
 char option;
 const int altura = 10;
 const int ancho = 20;
-char imagen[altura][ancho];
+char obra[altura][ancho];
 
 //************************************************************************************************
 //DEFINICIÓN DE PINES 
@@ -79,6 +79,98 @@ void loop() {
       Serial.print("1) Barbie \n");
       Serial.print("2) Rey Leon \n ");
       Serial.print("3) Tinker Bell \n ");
-      Serial.print("4) Drawing y guardar imagen \n ");
+      Serial.print("4) Drawing y guardar obra \n ");
     }
   }
+
+  // Procesar la entrada serial
+  while (Serial.available() > 0) {
+    option = Serial.read();
+
+    if (option >= '0' && option <= '5') {
+      switch (option) {
+ 
+        case '1':
+          // Mostrar Barbie
+          digitalWrite(LEDR, HIGH);   //Enciende LED ROJO (indicador que esta mostrando el archivo)
+          delay(1000);
+          Serial.println("...PELÍCULA 1: BARBIE ...");
+          Barbie = SD.open("Barbie.txt");    //Abre el archivo de Barbie
+          if (Barbie) {
+            Serial.println("Barbie.txt");  //Imprime el contenido en el monitor serial 
+            while (Barbie.available()) {  //Mientras que haya datos lee y envía los datos en el monitor serial
+              Serial.write(Barbie.read());
+            }
+            Barbie.close();  //Cierra el archivo 
+            digitalWrite(LEDR, LOW);
+            delay(250);
+          }
+           Serial.println("Regresando al Menu Principal...");
+           FLAG = 1;
+          break;
+        case '2':
+          // Mostrar Rey Leon
+          digitalWrite(LEDR, HIGH);  //Enciende LED ROJO Y VERDE (indicador que esta mostrando el archivo)
+          digitalWrite(LEDV, HIGH);
+          delay(1000);
+          Serial.println("PELÍCULA 2:... LION KING...");
+          LionK = SD.open("LionK.txt");  //Abre el archivo de LionKing
+          if (LionK) {
+            Serial.println("LionK.txt");
+            while (LionK.available()) {   //Mientras que haya datos lee y envía los datos en el monitor serial
+              Serial.write(LionK.read());
+            }
+            LionK.close();  //Cierra el archivo 
+            digitalWrite(LEDR, LOW);
+            digitalWrite(LEDV, LOW);
+            delay(250);
+          }
+           Serial.println("Regresando al Menu Principal...");
+          FLAG = 1;
+          break;
+        case '3':
+          // Mostrar Tinker Bell
+          digitalWrite(LEDV, HIGH); //Enciende LED VERDE (indicador que esta mostrando el archivo)
+          delay(1000);
+          Serial.println("...PELÍCULA 3: TINKERBELL...");
+          TinkerB = SD.open("TinkerB.txt"); //Abre el archivo de TinkerBell
+          if (TinkerB) {
+            Serial.println("TinkerB.txt");
+            while (TinkerB.available()) {  //Mientras que haya datos lee y envía los datos en el monitor
+              Serial.write(TinkerB.read());
+            }
+            TinkerB.close();  //Cierra el archivo 
+            digitalWrite(LEDV, LOW);
+            delay(250);
+          }
+           Serial.println("Regresando al Menu Principal...");
+          FLAG = 1;
+          break;
+        case '4':
+          // Dibujar y guardar obra
+          drawing();
+          guardar();
+          
+           Serial.println("Regresando al Menu Principal...");
+          FLAG = 1;
+          break;
+          
+       case '5':
+          Post = SD.open("postlab.txt");  //Abre el archivo en el microSD
+          if (Post) {
+            Serial.println("postlab.txt:");  //Imprime el conitenido del archivo Postlab
+            while (Post.available()) {  // Lee y envia datos del archivo al monitor serial
+              Serial.write(Post.read());
+            }
+            Post.close();  //Cierra el archivo 
+          } else {
+            Serial.println("error opening postlab.txt");
+          }
+           Serial.println("Regresando al Menu Principal...");
+          FLAG = 1;
+          break;
+       
+      }
+    }
+  }
+}
