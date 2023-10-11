@@ -1,0 +1,84 @@
+//Laboratorio 8- Karen Córdova- 21098
+
+//************************************************************************************************
+//LIBRERÍAS 
+//************************************************************************************************/
+#include <SPI.h>
+#include <SD.h>
+
+//************************************************************************************************
+//FILES DEL MICRO SD 
+//************************************************************************************************/
+File Barbie;
+File LionK;
+File TinkerB;
+File Post;
+
+//************************************************************************************************
+//VARIABLES GLOBALES  
+//************************************************************************************************/
+
+int val = 0;
+int FLAG = 0;
+char option;
+const int altura = 10;
+const int ancho = 20;
+char imagen[altura][ancho];
+
+//************************************************************************************************
+//DEFINICIÓN DE PINES 
+//************************************************************************************************/
+const int LEDR = RED_LED;
+const int LEDV = GREEN_LED;
+const int pushM = PUSH1;
+
+//************************************************************************************************
+//PROTOTIPOS DE FUNCION 
+//************************************************************************************************/
+void ObraArte();
+void drawing (void);
+void guardar ();
+
+//************************************************************************************************
+//CONFIGURACION 
+//************************************************************************************************/
+
+void setup() {
+  SPI.setModule(0);
+  Serial.begin(115200);
+  pinMode(pushM, INPUT_PULLUP);
+  pinMode(LEDR, OUTPUT);
+  pinMode(LEDV, OUTPUT);
+  pinMode(12, OUTPUT);
+
+  if (!SD.begin(12)) {
+    Serial.println("¡Inicialización fallida!");
+    return;
+  }
+  Serial.println("¡Inicialización completa!");
+}
+
+//************************************************************************************************
+//LOOP PRINCIPAL 
+//************************************************************************************************/
+
+void loop() {
+  int Buttonstate1 = digitalRead(pushM);
+
+  // Si el botón está presionado
+  if (Buttonstate1 == LOW) {
+    FLAG = 1;
+  } else {
+    // Si el botón se ha soltado
+    if (FLAG == 1) {
+      FLAG = 0;
+      // Mostrar el menú de selección de peliculas 
+      
+      Serial.print("             MENU DE SELECCIÓN\n     ");
+      Serial.print(" Ingrese el número de la película que desee ver \n ");
+      Serial.print("1) Barbie \n");
+      Serial.print("2) Rey Leon \n ");
+      Serial.print("3) Tinker Bell \n ");
+      Serial.print("4) Drawing y guardar imagen \n ");
+    }
+  }
